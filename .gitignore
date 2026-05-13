@@ -1,0 +1,5 @@
+
+# Verilator & Simulation Output
+obj_dir/
+*.vcd
+*.fst

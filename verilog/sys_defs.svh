@@ -1,0 +1,33 @@
+`ifndef __SYS_DEFS_SVH__
+`define __SYS_DEFS_SVH__
+
+`define OCC_WIDTH 100 
+
+typedef logic signed [15:0] DATA;
+typedef logic signed [7:0] OCC_ENTRY; 
+typedef logic [6:0] MEM_X; 
+typedef logic [6:0] MEM_Y; 
+typedef logic [3:0] ELEVATION; // 4-bit Laser ID
+
+typedef struct packed {
+    logic [1:0] valid;
+    DATA  [1:0] distance;
+    DATA  [1:0] azimuth;
+    ELEVATION [1:0] laser_id; 
+} INGRESS_PACKET;
+
+typedef struct packed {
+    DATA  [1:0] x;
+    DATA  [1:0] y;
+    DATA  [1:0] z;
+    logic [1:0] valid;
+} TRANSFORM_PACKET;
+
+typedef struct packed {
+    MEM_X     [1:0] mem_x;
+    MEM_Y     [1:0] mem_y;
+    OCC_ENTRY [1:0] increment;
+    logic     [1:0] valid;  
+} RMW_PACKET;
+
+`endif // __SYS_DEFS_SVH__
