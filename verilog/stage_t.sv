@@ -2,6 +2,7 @@
 module stage_t (
     input clk,
     input rst_n,
+    input stall,
     input INGRESS_PACKET data_in,
     output TRANSFORM_PACKET t2f_pipe
 );
@@ -30,7 +31,7 @@ always_ff @(posedge clk or negedge rst_n) begin
         valid_q       <= '0;    
         distance_q[0] <= '0;
         distance_q[1] <= '0;
-    end else begin
+    end else if (!stall) begin
         valid_q       <= data_in.valid;
         distance_q[0] <= data_in.distance[0];
         distance_q[1] <= data_in.distance[1];
@@ -55,7 +56,7 @@ end
 always_ff @(posedge clk or negedge rst_n) begin
     if(!rst_n) begin // Reset asserted
         t2f_pipe <= '0;
-    end else begin
+    end else if (!stall) begin
         t2f_pipe <= next_t2f_pipe;
     end
 end
