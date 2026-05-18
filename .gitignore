@@ -3,3 +3,55 @@
 obj_dir/
 *.vcd
 *.fst
+
+# ==========================================
+# Quartus Database & Incremental Compilation
+# ==========================================
+db/
+incremental_db/
+.qsys_edit/
+
+# ==========================================
+# Quartus Output Files (Bitstreams & Reports)
+# ==========================================
+output_files/
+*.rpt
+*.summary
+*.jdi
+*.pin
+*.done
+*.sld
+
+# ==========================================
+# User Workspace Settings
+# ==========================================
+*.qws
+
+# ==========================================
+# Generated Platform Designer (Qsys) Files
+# (We only keep the .qsys file)
+# ==========================================
+soc_system/
+*.sopcinfo
+*.html
+*.cmp
+
+# ==========================================
+# HPS Generated Files
+# ==========================================
+hps_isw_handoff/
+software/
+
+# ==========================================
+# Verilator & Simulation Output
+# ==========================================
+obj_dir/
+*.vcd
+*.fst
+
+# ==========================================
+# Temp Files
+# ==========================================
+*.bak
+*.tmp
+*.temp
