@@ -32,7 +32,7 @@ module accelerator (
         .data_in(data_in), .t2f_pipe(t2f_pipe)
     );
 
-    stage_f f (
+    stage_f #(.GND_THRESH(-16'sd2000)) f (
         .clk(clk), .rst_n(rst_n), .stall(stall),
         .t2f_pipe(t2f_pipe), .f2r_pipe(f2r_pipe)
     );
@@ -65,7 +65,7 @@ module accelerator (
 
     // Memory Instantiations
     // BANK 0 (Even Addresses)
-    double_buffer #(.`MEM_DEPTH(`MEM_DEPTH)) occ_b0 (
+    double_buffer occ_b0 (
         .clk(clk), .rst_n(rst_n), .switch(switch),
         
         .acc_we(proc2mem_we[0]),
@@ -82,7 +82,7 @@ module accelerator (
     );
 
     // BANK 1 (Odd Addresses)
-    double_buffer #(.`MEM_DEPTH(`MEM_DEPTH)) occ_b1 (
+    double_buffer occ_b1 (
         .clk(clk), .rst_n(rst_n), .switch(switch),
         
         .acc_we(proc2mem_we[1]),

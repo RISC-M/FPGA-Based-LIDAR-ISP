@@ -15,6 +15,7 @@ DATA [1:0] z_coeff;
 
 trig_lut lut(
     .clk,
+    .stall,
     .azimuth(data_in.azimuth),
     .laser_id(data_in.laser_id),
     .x_coeff,

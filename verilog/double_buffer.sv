@@ -1,8 +1,6 @@
 `include "sys_defs.svh"
 
-module double_buffer #(
-    parameter `MEM_DEPTH = 5000
-)(
+module double_buffer(
     input logic clk,
     input logic rst_n,
     input logic switch,
@@ -29,13 +27,13 @@ module double_buffer #(
     logic [$clog2(`MEM_DEPTH)-1:0] read_addr  [1:0];
     OCC_ENTRY                     data_out   [1:0];
 
-    mem #(.`MEM_DEPTH(`MEM_DEPTH)) mem0 (
+    mem mem0 (
         .clk(clk),
         .we(we[0]), .write_addr(write_addr[0]), .data_in(data_in[0]),
         .read_addr(read_addr[0]), .data_out(data_out[0])
     );
 
-    mem #(.`MEM_DEPTH(`MEM_DEPTH)) mem1 (
+    mem mem1 (
         .clk(clk),
         .we(we[1]), .write_addr(write_addr[1]), .data_in(data_in[1]),
         .read_addr(read_addr[1]), .data_out(data_out[1])

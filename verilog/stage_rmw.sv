@@ -19,7 +19,7 @@ module stage_rmw (
     // READ STAGE //
       
     // GENERATE MEM ADDRESSES
-    logic [$clog2(`MEM_DEPTH)-1:0] mem_addrs [1:0];
+    logic [13:0] mem_addrs [1:0];
     always_comb begin
         for(int i=0; i<2; i++) begin
             // Computes Y * 100 + X efficiently
@@ -64,12 +64,12 @@ module stage_rmw (
                 if (mem_addrs[0][0] == 1'b0) begin 
                     proc2mem_rdaddr[0] = mem_addrs[0][13:1]; // Route to Bank 0
                     next_r2w_packet.addr[0]   = mem_addrs[0][13:1];
-                    next_r2w_packet.inc[0]    = f2r_pipe.increment[0];
+                    next_r2w_packet.increment[0]    = f2r_pipe.increment[0];
                     next_r2w_packet.valid[0]  = 1'b1;
                 end else begin
                     proc2mem_rdaddr[1] = mem_addrs[0][13:1]; // Route to Bank 1
                     next_r2w_packet.addr[1]   = mem_addrs[0][13:1];
-                    next_r2w_packet.inc[1]    = f2r_pipe.increment[0];
+                    next_r2w_packet.increment[1]    = f2r_pipe.increment[0];
                     next_r2w_packet.valid[1]  = 1'b1;
                 end
             end else begin
@@ -77,12 +77,12 @@ module stage_rmw (
                 if (mem_addrs[1][0] == 1'b0) begin 
                     proc2mem_rdaddr[0] = mem_addrs[1][13:1]; // Route to Bank 0
                     next_r2w_packet.addr[0]   = mem_addrs[1][13:1];
-                    next_r2w_packet.inc[0]    = f2r_pipe.increment[1];
+                    next_r2w_packet.increment[0]    = f2r_pipe.increment[1];
                     next_r2w_packet.valid[0]  = 1'b1;
                 end else begin
                     proc2mem_rdaddr[1] = mem_addrs[1][13:1]; // Route to Bank 1
                     next_r2w_packet.addr[1]   = mem_addrs[1][13:1];
-                    next_r2w_packet.inc[1]    = f2r_pipe.increment[1];
+                    next_r2w_packet.increment[1]    = f2r_pipe.increment[1];
                     next_r2w_packet.valid[1]  = 1'b1;
                 end
             end
@@ -92,12 +92,12 @@ module stage_rmw (
                 if (mem_addrs[0][0] == 1'b0) begin
                     proc2mem_rdaddr[0] = mem_addrs[0][13:1];
                     next_r2w_packet.addr[0]   = mem_addrs[0][13:1];
-                    next_r2w_packet.inc[0]    = f2r_pipe.increment[0];
+                    next_r2w_packet.increment[0]    = f2r_pipe.increment[0];
                     next_r2w_packet.valid[0]  = 1'b1;
                 end else begin
                     proc2mem_rdaddr[1] = mem_addrs[0][13:1];
                     next_r2w_packet.addr[1]   = mem_addrs[0][13:1];
-                    next_r2w_packet.inc[1]    = f2r_pipe.increment[0];
+                    next_r2w_packet.increment[1]    = f2r_pipe.increment[0];
                     next_r2w_packet.valid[1]  = 1'b1;
                 end
             end 
@@ -105,12 +105,12 @@ module stage_rmw (
                 if (mem_addrs[1][0] == 1'b0) begin
                     proc2mem_rdaddr[0] = mem_addrs[1][13:1];
                     next_r2w_packet.addr[0]   = mem_addrs[1][13:1];
-                    next_r2w_packet.inc[0]    = f2r_pipe.increment[1];
+                    next_r2w_packet.increment[0]    = f2r_pipe.increment[1];
                     next_r2w_packet.valid[0]  = 1'b1;
                 end else begin
                     proc2mem_rdaddr[1] = mem_addrs[1][13:1];
                     next_r2w_packet.addr[1]   = mem_addrs[1][13:1];
-                    next_r2w_packet.inc[1]    = f2r_pipe.increment[1];
+                    next_r2w_packet.increment[1]    = f2r_pipe.increment[1];
                     next_r2w_packet.valid[1]  = 1'b1;
                 end
             end

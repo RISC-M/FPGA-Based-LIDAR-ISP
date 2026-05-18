@@ -1,30 +1,25 @@
-# generate_points.py
 import sys
 
+# We generate a 360 degree sweep, distance 2000mm, laser ID 0 (flat).
+# We need to output two points per line to feed Lane 1 and Lane 0 simultaneously.
+
 filename = "stimulus.txt"
-
 with open(filename, "w") as f:
-    azimuth = 0
-    # Generate 90 clock cycles of data (2 points per cycle = 180 points, covering 360 degrees)
-    for i in range(90):
-        valid = 3 # 2'b11 (both lanes valid)
+    # 360 degrees, step by 2 so we have 180 points total (90 clock cycles)
+    for i in range(0, 360, 2):
+        # Point 1 (Lane 1)
+        az1 = (i + 1) * 100 # Multiply by 100 for your LUT logic
+        d1 = 2000
+        l1 = 0
+        v1 = 1
         
-        # Lane 0
-        dist0 = 2000        # 2000 mm distance
-        az0 = azimuth * 100 # Q1.15 format (e.g., 2.00 degrees = 200)
-        lid0 = 0            # Laser 0 (-15 degrees elevation)
+        # Point 0 (Lane 0)
+        az0 = i * 100
+        d0 = 2000
+        l0 = 0
+        v0 = 1
         
-        azimuth += 2 # Increment azimuth by 2 degrees
-        
-        # Lane 1
-        dist1 = 2000
-        az1 = azimuth * 100
-        lid1 = 0
-        
-        azimuth += 2
-        
-        # Write as hex: VALID DIST0 AZ0 LID0 DIST1 AZ1 LID1
-        # Example output: 3 07d0 0000 0 07d0 00c8 0
-        f.write(f"{valid:1x} {dist0:04x} {az0:04x} {lid0:1x} {dist1:04x} {az1:04x} {lid1:1x}\n")
+        # Format: valid1 distance1 azimuth1 laser_id1 valid0 distance0 azimuth0 laser_id0
+        f.write(f"{v1} {d1} {az1} {l1} {v0} {d0} {az0} {l0}\n")
 
-print(f"Generated test points in {filename}")
+print(f"Generated {filename} with 90 cycles of dual-lane stimulus.")
