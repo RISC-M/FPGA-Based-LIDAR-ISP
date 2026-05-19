@@ -11,14 +11,8 @@ module mem (
     input  logic [$clog2(`MEM_DEPTH)-1:0] read_addr,     // 14-bit Read Address
     output OCC_ENTRY data_out                           // Data read out
 );
-    OCC_ENTRY ram [0:`MEM_DEPTH-1];
-
-    // Initialize the RAM to Zero
-    initial begin
-        for (int i = 0; i < `MEM_DEPTH; i++) begin
-            ram[i] = '0;
-        end
-    end
+    // Initialize the entire RAM to Zero natively at declaration
+    OCC_ENTRY ram [0:`MEM_DEPTH-1] = '{default: '0};
 
     // Synchronous Write
     always_ff @(posedge clk) begin

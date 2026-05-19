@@ -10,37 +10,42 @@ module stage_f #(
     input  logic stall, // backpressure stall from RAW hazards
     output RMW_PACKET f2r_pipe
 );
-    
     RMW_PACKET next_f2r_pipe;
 
+    // Intermediate math arrays declared outside the procedural loop scope
+    logic signed [31:0] scaled_x [1:0];
+    logic signed [31:0] scaled_y [1:0];
+    logic signed [15:0] mem_x_signed [1:0];
+    logic signed [15:0] mem_y_signed [1:0];
+
     always_comb begin
-        next_f2r_pipe = '0; 
+        next_f2r_pipe = '0;
         for(int i = 0; i < 2; i++) begin
             
             // Divide by 50 hardware friendly
-            logic signed [31:0] scaled_x = (signed'(32'(t2f_pipe.x[i])) * 32'sd1311) >>> 16;
-            logic signed [31:0] scaled_y = (signed'(32'(t2f_pipe.y[i])) * 32'sd1311) >>> 16;
-
+            scaled_x[i] = (signed'(32'(t2f_pipe.x[i])) * 32'sd1311) >>> 16;
+            scaled_y[i] = (signed'(32'(t2f_pipe.y[i])) * 32'sd1311) >>> 16;
+            
             // Shift Origin to 50,50
-            logic signed [15:0] mem_x_signed = 16'(scaled_x) + 16'sd50;
-            logic signed [15:0] mem_y_signed = 16'(scaled_y) + 16'sd50;
+            mem_x_signed[i] = 16'(scaled_x[i]) + 16'sd50;
+            mem_y_signed[i] = 16'(scaled_y[i]) + 16'sd50;
 
             // Boundary checking (filter out points outside of occupancy range or a ground point)
             if (t2f_pipe.valid[i] && 
                 t2f_pipe.z[i] >= GND_THRESH && 
-                mem_x_signed >= 0 && mem_x_signed < 100 && 
-                mem_y_signed >= 0 && mem_y_signed < 100) begin
+                mem_x_signed[i] >= 0 && mem_x_signed[i] < 100 && 
+                mem_y_signed[i] >= 0 && mem_y_signed[i] < 100) begin
                 
                 next_f2r_pipe.valid[i]     = 1'b1;
-                next_f2r_pipe.mem_x[i]     = MEM_X'(mem_x_signed);
-                next_f2r_pipe.mem_y[i]     = MEM_Y'(mem_y_signed);
+                next_f2r_pipe.mem_x[i]     = MEM_X'(mem_x_signed[i]);
+                next_f2r_pipe.mem_y[i]     = MEM_Y'(mem_y_signed[i]);
                 next_f2r_pipe.increment[i] = HIT_WEIGHT;
-                
             end else begin
                 next_f2r_pipe.valid[i]     = 1'b0;
                 next_f2r_pipe.increment[i] = 8'd0;
             end
         end
+
         // REDUCTION TREE
         // If both points are valid and land in the exact same memory cell
         if (next_f2r_pipe.valid[0] && next_f2r_pipe.valid[1] &&

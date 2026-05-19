@@ -1,6 +1,3 @@
-`ifndef __SYS_DEFS_SVH__
-`define __SYS_DEFS_SVH__
-
 `define OCC_WIDTH 100 
 `define MEM_DEPTH 5000 // Banked so 10000 / 2
 
@@ -37,4 +34,3 @@ typedef struct packed {
     OCC_ENTRY     [1:0] increment;   // Bank0/1 Increments
 } R2W_PACKET;
 
-`endif // __SYS_DEFS_SVH__

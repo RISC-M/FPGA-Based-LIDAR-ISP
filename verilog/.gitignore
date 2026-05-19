@@ -1,0 +1,58 @@
+# ==========================================================================
+# Verilator & Simulation Output
+# ==========================================================================
+obj_dir/
+*.vcd
+*.fst
+simulation/
+
+# ==========================================================================
+# Quartus Database & Cache Engines
+# ==========================================================================
+db/
+incremental_db/
+.qsys_edit/
+hc_output/
+*.qws
+
+# ==========================================================================
+# Quartus Output Files (Bitstreams & Reports)
+# ==========================================================================
+output_files/
+*.rpt
+*.summary
+*.jdi
+*.pin
+*.done
+*.sld
+*.smsg
+*.sof
+*.pof
+*.rbf
+
+# ==========================================================================
+# Temporary & Backup Files
+# ==========================================================================
+*.bak
+*.tmp
+*.txt
+*~
+
+# ==========================================================================
+# Platform Designer (Qsys) Processing Space
+# ==========================================================================
+# Ignore all generated Qsys directories...
+# ==========================================================================
+# Platform Designer (Qsys) Processing Space
+# ==========================================================================
+# Ignore the CONTENTS of any soc_system folder so Git still climbs inside to check rules
+**/soc_system/*
+
+# Explicitly whitelist the two files required for structural synthesis
+!**/soc_system/synthesis/soc_system.qip
+!**/soc_system/synthesis/soc_system.v
+# ==========================================================================
+# HPS Generated Files & Software Workspace
+# ==========================================================================
+hps_isw_handoff/
+software/
