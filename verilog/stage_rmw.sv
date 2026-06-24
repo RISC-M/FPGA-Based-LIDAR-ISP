@@ -23,8 +23,8 @@ module stage_rmw (
     always_comb begin
         for(int i=0; i<2; i++) begin
             // Computes Y * 100 + X efficiently
-            mem_addrs[i] = (f2r_pipe.mem_y[i] << 6) + (f2r_pipe.mem_y[i] << 5) + 
-                           (f2r_pipe.mem_y[i] << 2) + f2r_pipe.mem_x[i]; 
+            mem_addrs[i] = (14'(f2r_pipe.mem_y[i]) << 6) + (14'(f2r_pipe.mem_y[i]) << 5) + 
+                           (14'(f2r_pipe.mem_y[i]) << 2) + 14'(f2r_pipe.mem_x[i]); 
         end
     end
 

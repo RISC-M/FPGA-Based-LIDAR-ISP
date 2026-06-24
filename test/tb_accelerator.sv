@@ -24,8 +24,8 @@ module tb_accelerator;
     accelerator dut (
         .clk(clk),
         .rst_n(rst_n),
-        .data_in(data_in),
-        .switch(switch),
+        .data_in_flat(data_in),
+        .buffer_switch(switch),
         
         .hps_we(hps_we),
         .hps_write_addr(hps_write_addr),

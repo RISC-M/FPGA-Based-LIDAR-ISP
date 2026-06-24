@@ -55,3 +55,12 @@ obj_dir/
 *.bak
 *.tmp
 *.temp
+
+# ==========================================
+# Python & Cocotb Simulation Files
+# ==========================================
+__pycache__/
+*.pyc
+sim_build/
+results.xml
+output_map_cocotb.txt

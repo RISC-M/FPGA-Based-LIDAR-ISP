@@ -3,8 +3,8 @@
 module accelerator (
     input clk,
     input rst_n,
-    input INGRESS_PACKET data_in_flat, 
-    input switch,
+    input [73:0] data_in_flat, 
+    input buffer_switch,
 
     // HPS Processor Ports (Continuous 14-bit Address Space)
     input  logic                            hps_we,         
@@ -15,6 +15,9 @@ module accelerator (
 );
 
     // Pipeline wires
+    INGRESS_PACKET   data_in;
+    assign data_in = INGRESS_PACKET'(data_in_flat);
+
     TRANSFORM_PACKET t2f_pipe;
     RMW_PACKET       f2r_pipe;
     logic            stall;
@@ -29,7 +32,7 @@ module accelerator (
     // Pipeline instantiations
     stage_t t (
         .clk(clk), .rst_n(rst_n), .stall(stall),
-        .data_in(data_in_flat), .t2f_pipe(t2f_pipe)
+        .data_in(data_in), .t2f_pipe(t2f_pipe)
     );
 
     stage_f #(.GND_THRESH(-16'sd2000)) f (
@@ -66,7 +69,7 @@ module accelerator (
     // Memory Instantiations
     // BANK 0 (Even Addresses)
     double_buffer occ_b0 (
-        .clk(clk), .rst_n(rst_n), .switch(switch),
+        .clk(clk), .rst_n(rst_n), .buffer_switch(buffer_switch),
         
         .acc_we(proc2mem_we[0]),
         .acc_write_addr(proc2mem_wraddr[0]),
@@ -83,7 +86,7 @@ module accelerator (
 
     // BANK 1 (Odd Addresses)
     double_buffer occ_b1 (
-        .clk(clk), .rst_n(rst_n), .switch(switch),
+        .clk(clk), .rst_n(rst_n), .buffer_switch(buffer_switch),
         
         .acc_we(proc2mem_we[1]),
         .acc_write_addr(proc2mem_wraddr[1]),

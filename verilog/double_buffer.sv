@@ -3,7 +3,7 @@
 module double_buffer(
     input logic clk,
     input logic rst_n,
-    input logic switch,
+    input logic buffer_switch,
 
     // Accelerator ports
     input  logic                         acc_we,
@@ -44,7 +44,7 @@ module double_buffer(
     always_ff @(posedge clk or negedge rst_n) begin
         if(!rst_n)
             ctr <= 1'b0;
-        else if (switch)
+        else if (buffer_switch)
             ctr <= ~ctr;
     end
 
