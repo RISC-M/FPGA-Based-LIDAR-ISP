@@ -87,6 +87,9 @@ int main() {
                     for (int y = 99; y >= 0; y--) {
                         for (int x = 0; x < 100; x++) {
                             int addr = (y * 100) + x;
+                            // Double read to handle 1-cycle BRAM latency over Avalon bus
+                            volatile uint8_t dummy = read_port_ptr[addr];
+                            __sync_synchronize();
                             uint8_t cell = read_port_ptr[addr];
 
                             // Visualize cell density into the buffer
@@ -132,7 +135,9 @@ int main() {
 
                         stream_port_ptr[0] = reg0;
                         stream_port_ptr[1] = reg1;
-                        stream_port_ptr[2] = reg2; 
+                        __sync_synchronize();
+                        stream_port_ptr[2] = reg2; // Word 2 triggers the pipeline automatically
+                        __sync_synchronize();
                     }
                 }
             }
