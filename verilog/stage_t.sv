@@ -4,9 +4,15 @@ module stage_t (
     input rst_n,
     input stall,
     input INGRESS_PACKET data_in,
-    output TRANSFORM_PACKET t2f_pipe
+    output TRANSFORM_PACKET t2f_pipe,
+
+    output DATA [1:0] debug_x_coeff,
+    output DATA [1:0] debug_y_coeff,
+    output DATA [1:0] debug_z_coeff,
+    output DATA [1:0] debug_distance_q,
+    output logic [1:0][8:0] debug_az_degree
 );
-// NOTE: This stage is 2 clock cycles, since the BRAM memory read is 1 cycle
+
 TRANSFORM_PACKET next_t2f_pipe;
 
 DATA [1:0] x_coeff;
@@ -20,9 +26,10 @@ trig_lut lut(
     .laser_id(data_in.laser_id),
     .x_coeff,
     .y_coeff,
-    .z_coeff
+    .z_coeff,
+    .debug_az_degree(debug_az_degree)
 );
-// Registers to hold the data (lut takes 1 cycle to read)
+
 logic   [1:0] valid_q;
 DATA    [1:0] distance_q;
 
@@ -38,32 +45,40 @@ always_ff @(posedge clk or negedge rst_n) begin
     end
 end
 
+logic signed [31:0] math_x0, math_y0, math_z0;
+logic signed [31:0] math_x1, math_y1, math_z1;
+
 always_comb begin
+    math_x0 = distance_q[0] * x_coeff[0];
+    math_y0 = distance_q[0] * y_coeff[0];
+    math_z0 = distance_q[0] * z_coeff[0];
+
+    math_x1 = distance_q[1] * x_coeff[1];
+    math_y1 = distance_q[1] * y_coeff[1];
+    math_z1 = distance_q[1] * z_coeff[1];
+
     next_t2f_pipe.valid = valid_q;
-    for(int i = 0; i < 2; i++) begin
-        // 1. Declare variables cleanly within loop scope
-        logic signed [31:0] math_x;
-        logic signed [31:0] math_y;
-        logic signed [31:0] math_z;
+    
+    next_t2f_pipe.x[0] = DATA'(math_x0 >>> 15);
+    next_t2f_pipe.y[0] = DATA'(math_y0 >>> 15);
+    next_t2f_pipe.z[0] = DATA'(math_z0 >>> 15);
 
-        // 2. Perform operational assignments dynamically
-        math_x = signed'(32'(distance_q[i])) * signed'(32'(x_coeff[i]));
-        math_y = signed'(32'(distance_q[i])) * signed'(32'(y_coeff[i]));
-        math_z = signed'(32'(distance_q[i])) * signed'(32'(z_coeff[i]));
-
-        // Shift and cast back down to 16 bits
-        next_t2f_pipe.x[i] = DATA'(math_x >>> 15);
-        next_t2f_pipe.y[i] = DATA'(math_y >>> 15);
-        next_t2f_pipe.z[i] = DATA'(math_z >>> 15);
-    end
+    next_t2f_pipe.x[1] = DATA'(math_x1 >>> 15);
+    next_t2f_pipe.y[1] = DATA'(math_y1 >>> 15);
+    next_t2f_pipe.z[1] = DATA'(math_z1 >>> 15);
 end
 
 always_ff @(posedge clk or negedge rst_n) begin
-    if(!rst_n) begin // Reset asserted
+    if(!rst_n) begin
         t2f_pipe <= '0;
     end else if (!stall) begin
         t2f_pipe <= next_t2f_pipe;
     end
 end
+
+assign debug_x_coeff = x_coeff;
+assign debug_y_coeff = y_coeff;
+assign debug_z_coeff = z_coeff;
+assign debug_distance_q = distance_q;
 
 endmodule

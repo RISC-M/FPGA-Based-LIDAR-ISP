@@ -12,7 +12,8 @@ module trig_lut #(
     input  ELEVATION    [1:0] laser_id,
     output DATA         [1:0] x_coeff,
     output DATA         [1:0] y_coeff,
-    output DATA         [1:0] z_coeff
+    output DATA         [1:0] z_coeff,
+    output logic [1:0][8:0] debug_az_degree
 );
 
     // 9 bit wire for the truncated 0-359 degree value
@@ -39,5 +40,7 @@ module trig_lut #(
             {x_coeff[1], y_coeff[1], z_coeff[1]} <= rom[{laser_id[1], az_degree[1]}];
         end
     end
+
+    assign debug_az_degree = az_degree;
 
 endmodule
