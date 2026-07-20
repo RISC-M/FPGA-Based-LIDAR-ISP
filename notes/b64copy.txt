@@ -1,0 +1,16 @@
+Convert to base 64 and copy:
+
+$p = "C:\Users\shash\Documents\My Files\RISC-M\Old\FPGA-Based-LIDAR-ISP\hps\lidar_script.c"
+$b64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes($p))
+([regex]::Matches($b64, '.{1,64}').Value -join "`r`n") | Set-Clipboard
+
+In PuTTY, run:
+cat > /tmp/lidar_script.b64
+ 
+then paste it and press ctrl+D
+
+then decode the file:
+base64 -d /tmp/lidar_script.b64 > /root/lidar_script.c
+
+and compile:
+gcc -std=gnu11 -Wall -Wextra -O2 lidar_script.c -o lidar_script
