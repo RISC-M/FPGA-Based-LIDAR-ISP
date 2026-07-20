@@ -16,5 +16,7 @@ The occupancy grid is double-buffered: the FPGA writes the next frame while the 
 
 [`hps/lidar_script.c`](hps/lidar_script.c) is the runtime program. It receives VLP-16 UDP packets, packs pairs of returns into three 32-bit writes for the FPGA, detects each full LiDAR rotation, swaps the grid buffer, and renders the completed grid in the terminal.
 
-## Demo
+## Demo 
+(Running on the HPS & FPGA - PuTTY Terminal Output)
+
 https://github.com/user-attachments/assets/bc04ed2d-d5ed-49bb-ad1b-409f4d429f57
