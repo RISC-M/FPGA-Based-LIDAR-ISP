@@ -2,11 +2,6 @@
 
 This project uses a pipelined LiDAR data processor in FPGA fabric (DE10-NANO) to turn VLP-16 returns into a 100 x 100 occupancy grid. The HPS receives the LiDAR stream and the FPGA performs the per-point processing.
 
-## Demo
-
-[Watch the LiDAR demo](notes/LiDAR%20iSP%20Demo.mp4)
-
-
 ## FPGA pipeline
 
 The processor handles two LiDAR returns at a time in three stages:
@@ -20,3 +15,6 @@ The occupancy grid is double-buffered: the FPGA writes the next frame while the 
 ## HPS software
 
 [`hps/lidar_script.c`](hps/lidar_script.c) is the runtime program. It receives VLP-16 UDP packets, packs pairs of returns into three 32-bit writes for the FPGA, detects each full LiDAR rotation, swaps the grid buffer, and renders the completed grid in the terminal.
+
+## Demo
+https://github.com/user-attachments/assets/bc04ed2d-d5ed-49bb-ad1b-409f4d429f57
